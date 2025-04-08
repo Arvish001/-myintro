@@ -31,6 +31,17 @@ document.addEventListener('DOMContentLoaded', () => {
     menuToggle.addEventListener('click', () => {
         menuToggle.classList.toggle('active');
         navLinksContainer.classList.toggle('active');
+        
+        // Update aria-expanded attribute for accessibility
+        const isExpanded = navLinksContainer.classList.contains('active');
+        menuToggle.setAttribute('aria-expanded', isExpanded);
+        
+        // Prevent body scroll when menu is open
+        if (isExpanded) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     });
 
     // Close menu when clicking a nav link on mobile
@@ -39,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (navLinksContainer.classList.contains('active')) {
                 menuToggle.classList.remove('active');
                 navLinksContainer.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
             }
             // Manually set active class and update indicator immediately on click (for desktop)
             if (window.innerWidth > 768) {
@@ -61,7 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentSectionId = '';
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
-            if (window.scrollY >= (sectionTop - 150)) { // Adjusted offset for better activation timing
+            const sectionHeight = section.offsetHeight;
+            if (window.scrollY >= (sectionTop - 150) && window.scrollY < (sectionTop + sectionHeight - 150)) {
                 currentSectionId = section.getAttribute('id');
             }
         });
@@ -75,12 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-         // If scrolled to top or no section is active, activate 'Home'
+        // If scrolled to top or no section is active, activate 'Home'
         if (!activeLinkFound && window.scrollY < sections[0].offsetTop - 150) {
-             const homeLink = navLinksContainer.querySelector('a[href="#home"]');
-             if(homeLink && !homeLink.classList.contains('active')) {
-                 homeLink.classList.add('active');
-             }
+            const homeLink = navLinksContainer.querySelector('a[href="#home"]');
+            if (homeLink && !homeLink.classList.contains('active')) {
+                homeLink.classList.add('active');
+            }
         }
 
         // Update indicator position on scroll
@@ -88,21 +102,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Update indicator on window resize
-    window.addEventListener('resize', updateIndicator);
+    window.addEventListener('resize', () => {
+        updateIndicator();
+        
+        // Reset mobile menu state on resize to desktop
+        if (window.innerWidth > 768 && navLinksContainer.classList.contains('active')) {
+            navLinksContainer.classList.remove('active');
+            menuToggle.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+    });
 
     // Add reveal animations on scroll
-    const revealElements = document.querySelectorAll('.section-header, .skill-card, .project-card, .contact-item');
+    const revealElements = document.querySelectorAll('.section-header, .skill-card, .project-card, .contact-item, .about-text p, .about-stats');
     
     // Create IntersectionObserver
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('revealed');
+                
+                // Add staggered reveal for child elements
+                if (entry.target.classList.contains('skills-grid') || 
+                    entry.target.classList.contains('projects-grid') || 
+                    entry.target.classList.contains('contact-info')) {
+                    
+                    const children = entry.target.children;
+                    Array.from(children).forEach((child, index) => {
+                        setTimeout(() => {
+                            child.classList.add('revealed');
+                        }, 100 * index);
+                    });
+                }
+                
                 revealObserver.unobserve(entry.target);
             }
         });
     }, {
-        threshold: 0.1
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
     });
 
     // Observe each element
@@ -111,26 +150,107 @@ document.addEventListener('DOMContentLoaded', () => {
         revealObserver.observe(element);
     });
 
-    // Form submission
+    // Add container elements as well
+    const revealContainers = document.querySelectorAll('.skills-grid, .projects-grid, .contact-info');
+    revealContainers.forEach(container => {
+        container.classList.add('reveal-container');
+        
+        // Make children invisible initially
+        Array.from(container.children).forEach(child => {
+            child.classList.add('reveal-element');
+            child.style.opacity = '0';
+        });
+        
+        revealObserver.observe(container);
+    });
+
+    // Form submission with validation
     const contactForm = document.querySelector('.contact-form form');
     
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // Simple form validation
-            const nameInput = contactForm.querySelector('input[type="text"]');
-            const emailInput = contactForm.querySelector('input[type="email"]');
-            const messageInput = contactForm.querySelector('textarea');
+            // Get form inputs
+            const nameInput = contactForm.querySelector('input[name="name"]');
+            const emailInput = contactForm.querySelector('input[name="email"]');
+            const messageInput = contactForm.querySelector('textarea[name="message"]');
             
-            if (nameInput.value && emailInput.value && messageInput.value) {
+            // Validate form
+            let isValid = true;
+            const inputs = [nameInput, emailInput, messageInput];
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    highlightInvalidField(input);
+                } else {
+                    removeHighlight(input);
+                }
+            });
+            
+            // Additional email validation
+            if (isValid && !isValidEmail(emailInput.value)) {
+                isValid = false;
+                highlightInvalidField(emailInput, 'Please enter a valid email address');
+            }
+            
+            if (isValid) {
                 // In a real application, you would send the form data to a server
-                alert('Thank you for your message! I will get back to you soon.');
+                // For this demo, we'll show a success message
+                showFormMessage('Thank you for your message! I will get back to you soon.', 'success');
                 contactForm.reset();
             } else {
-                alert('Please fill out all required fields.');
+                showFormMessage('Please fill out all required fields correctly.', 'error');
             }
         });
+        
+        // Add input event listeners to clear validation styles on input
+        contactForm.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('input', () => {
+                removeHighlight(input);
+                clearFormMessage();
+            });
+        });
+    }
+    
+    // Helper functions for form validation
+    function highlightInvalidField(field, message) {
+        field.style.borderColor = 'var(--accent-primary)';
+        field.style.backgroundColor = 'rgba(255, 107, 107, 0.05)';
+    }
+    
+    function removeHighlight(field) {
+        field.style.borderColor = '';
+        field.style.backgroundColor = '';
+    }
+    
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    function showFormMessage(message, type) {
+        // Remove existing message if any
+        clearFormMessage();
+        
+        // Create message element
+        const messageEl = document.createElement('div');
+        messageEl.className = `form-message ${type}`;
+        messageEl.textContent = message;
+        
+        // Add to form
+        contactForm.appendChild(messageEl);
+        
+        // Auto remove after 5 seconds
+        setTimeout(clearFormMessage, 5000);
+    }
+    
+    function clearFormMessage() {
+        const existingMessage = contactForm.querySelector('.form-message');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
     }
 
     // Typing animation for hero section
@@ -183,8 +303,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         .revealed {
-            opacity: 1;
+            opacity: 1 !important;
             transform: translateY(0);
+        }
+        
+        .form-message {
+            padding: 10px 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .form-message.success {
+            background-color: rgba(78, 205, 196, 0.2);
+            color: var(--accent-secondary);
+        }
+        
+        .form-message.error {
+            background-color: rgba(255, 107, 107, 0.2);
+            color: var(--accent-primary);
         }
     `;
     document.head.appendChild(style);
@@ -227,10 +364,14 @@ document.addEventListener('DOMContentLoaded', () => {
         playPauseBtn.addEventListener('click', () => {
             if (audio.paused || audio.muted) { // Check if paused OR muted
                 audio.muted = false; // Unmute first
-                audio.play();
-                playPauseIcon.classList.remove('fa-play');
-                playPauseIcon.classList.add('fa-pause');
-                playPauseBtn.setAttribute('aria-label', 'Pause Background Audio');
+                audio.play().then(() => {
+                    playPauseIcon.classList.remove('fa-play');
+                    playPauseIcon.classList.add('fa-pause');
+                    playPauseBtn.setAttribute('aria-label', 'Pause Background Audio');
+                }).catch(error => {
+                    console.error("Audio play failed:", error);
+                    // Keep the play icon if play fails
+                });
             } else {
                 audio.pause();
                 playPauseIcon.classList.remove('fa-pause');
@@ -239,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Optional: Update icon if audio is paused externally
+        // Update icon if audio is paused externally
         audio.addEventListener('pause', () => {
             if (!audio.ended && !audio.muted) { // Only if not ended and not muted
                 playPauseIcon.classList.remove('fa-pause');
@@ -247,49 +388,79 @@ document.addEventListener('DOMContentLoaded', () => {
                 playPauseBtn.setAttribute('aria-label', 'Play Background Audio');
             }
         });
-
-        // Optional: Update icon if audio starts playing externally (less likely)
-        audio.addEventListener('play', () => {
-            if (!audio.muted) { // Only if audible
-                playPauseIcon.classList.remove('fa-play');
-                playPauseIcon.classList.add('fa-pause');
-                playPauseBtn.setAttribute('aria-label', 'Pause Background Audio');
-            }
-        });
-
-        // Handle the case where user might interact elsewhere causing audio to pause/play
-        // This ensures button state is somewhat synced if possible
     }
 
-    // Custom Cursor Logic
+    // Custom cursor implementation
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
-
-    if (cursorDot && cursorOutline) {
-        window.addEventListener('mousemove', function (e) {
-            const posX = e.clientX;
-            const posY = e.clientY;
-
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
-
-            // Use requestAnimationFrame for smoother outline animation
-            requestAnimationFrame(() => {
-                cursorOutline.style.left = `${posX}px`;
-                cursorOutline.style.top = `${posY}px`;
-            });
+    
+    if (cursorDot && cursorOutline && window.innerWidth > 768) {
+        let mouseX = 0;
+        let mouseY = 0;
+        let outlineX = 0;
+        let outlineY = 0;
+        
+        // Mouse move event
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Position the dot immediately (no lag)
+            cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
         });
-
-        // Add hover effect to links and buttons
-        const interactiveElements = document.querySelectorAll('a, button, .btn, .skill-card, .project-card, .profile-image-container');
-
+        
+        // Add hover effect to interactive elements
+        const interactiveElements = document.querySelectorAll('a, button, input, textarea, .skill-card, .project-card, .social-link, .profile-image-container');
+        
         interactiveElements.forEach(el => {
-            el.addEventListener('mouseover', () => {
+            el.addEventListener('mouseenter', () => {
                 cursorOutline.classList.add('hover-effect');
             });
-            el.addEventListener('mouseout', () => {
+            
+            el.addEventListener('mouseleave', () => {
                 cursorOutline.classList.remove('hover-effect');
             });
+        });
+        
+        // Animation loop for smooth outline movement
+        function animateCursor() {
+            // Smooth interpolation
+            const ease = 0.2; // Lower = smoother but slower
+            
+            // Calculate the distance between the dot and outline
+            const dx = mouseX - outlineX;
+            const dy = mouseY - outlineY;
+            
+            // Move outline towards dot position using interpolation
+            outlineX += dx * ease;
+            outlineY += dy * ease;
+            
+            // Apply the position
+            cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px)`;
+            
+            // Call next frame
+            requestAnimationFrame(animateCursor);
+        }
+        
+        // Start animation
+        animateCursor();
+        
+        // Show custom cursor
+        document.documentElement.classList.add('custom-cursor');
+    } else {
+        // Hide custom cursor elements on mobile
+        if (cursorDot) cursorDot.style.display = 'none';
+        if (cursorOutline) cursorOutline.style.display = 'none';
+    }
+    
+    // Scroll to section when clicking on scroll indicator
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+        scrollIndicator.addEventListener('click', () => {
+            const aboutSection = document.getElementById('about');
+            if (aboutSection) {
+                aboutSection.scrollIntoView({ behavior: 'smooth' });
+            }
         });
     }
 });
