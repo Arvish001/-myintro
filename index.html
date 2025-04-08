@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arvish Nagpal | Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <div class="noise-overlay"></div>
+    <audio id="background-audio" src="sound.mp3" autoplay loop muted></audio>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <span>Arvish</span>Nagpal
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-social-links">
+                <a href="#" class="social-link-nav"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/arvish-nagpal-10ab2b343/" class="social-link-nav"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@nagpal_sahab001" class="social-link-nav"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="social-link-nav"><i class="fab fa-twitter"></i></a>
+                <button id="play-pause-btn" class="audio-control-btn" aria-label="Play Background Audio">
+                    <i class="fas fa-play"></i>
+                </button> 
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h3 class="subtitle">Hello, I'm</h3>
+                    <h1 class="title">Arvish Nagpal</h1>
+                    <h2 class="role">Developer & Designer</h2>
+                    <p class="description">
+                        Proficient in Python and C programming, adept at crafting compelling graphic designs, and driven by a vision to create meaningful and transformative digital experiences.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#projects" class="btn btn-primary">View My Work</a>
+                        <a href="#contact" class="btn btn-outline">Contact Me</a>
+                    </div>
+                </div>
+                <div class="profile-image-container">
+                    <a id="profile-link" href="https://www.linkedin.com/in/arvish-nagpal-10ab2b343/" target="_blank" rel="noopener noreferrer" aria-label="Arvish Nagpal LinkedIn Profile">
+                        <img src="./final2.jpeg" alt="Arvish Nagpal" class="profile-image">
+                    </a>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <span>Scroll</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h3 class="section-subtitle">About Me 🧑‍💻</h3>
+                <h2 class="section-title">Who I Am</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>I am Arvish Nagpal, hailing from the vibrant city of Abohar in Punjab.</p>
+                    <p>Currently pursuing B.Tech in Artificial Intelligence and Machine Learning after completing 12th with 80% marks from GSSSS Abohar.</p>
+                    <p>I'm a versatile digital expert with a knack for programming and design. My experience ranges from software development to graphic design, where I've collaborated with companies like Cloud Mentor (US-based) and Raaga Entertainment.</p>
+                    <p>Beyond my professional pursuits, I enjoy reading self-help books, playing basketball, and swimming. I'm also a state-level basketball player and zone-level chess player.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat">
+                        <div class="stat-value">Python & C</div>
+                        <div class="stat-label">Programming</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">10,000+</div>
+                        <div class="stat-label">Subscribers</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Multiple</div>
+                        <div class="stat-label">Design Projects</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <div class="section-header">
+                <h3 class="section-subtitle">My Skills</h3>
+                <h2 class="section-title">What I Do</h2>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Programming</h3>
+                    <p>Specialized in Python and C with a focus on building efficient and scalable applications.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Graphic Designing</h3>
+                    <p>Skilled in logo creation, having collaborated with companies like Cloud Mentor and Raaga Entertainment.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3>Video Editing</h3>
+                    <p>Experienced editor working with multiple content creators to deliver high-quality video content.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3>Content Creation</h3>
+                    <p>A creator with over 10,000 subscribers across various channels, producing engaging digital content.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <div class="section-header">
+                <h3 class="section-subtitle">My Work</h3>
+                <h2 class="section-title">Featured Projects</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Project 1">
+                    </div>
+                    <div class="project-info">
+                        <h3>AI Portfolio Project</h3>
+                        <p>An AI-powered application built with Python that analyzes data and provides insights.</p>
+                        <div class="project-technologies">
+                            <span>Python</span>
+                            <span>TensorFlow</span>
+                            <span>Data Analysis</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="btn btn-sm">Live Demo</a>
+                            <a href="#" class="btn btn-sm btn-outline">Code</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Project 2">
+                    </div>
+                    <div class="project-info">
+                        <h3>Graphic Design Collection</h3>
+                        <p>A showcase of logo designs and branding work for clients including Cloud Mentor and Raaga Entertainment.</p>
+                        <div class="project-technologies">
+                            <span>Logo Design</span>
+                            <span>Branding</span>
+                            <span>Creative Direction</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="btn btn-sm">Live Demo</a>
+                            <a href="#" class="btn btn-sm btn-outline">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h3 class="section-subtitle">Get In Touch</h3>
+                <h2 class="section-title">Contact Me</h2>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3>Email</h3>
+                            <p>arvishnagpal001@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h3>Phone</h3>
+                            <p>9068700777</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Location</h3>
+                            <p>Abohar, Punjab, India</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/arvish-nagpal-10ab2b343/" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.youtube.com/@nagpal_sahab001" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form action="https://formsubmit.co/arvishnagpal001@gmail.com" method="POST">
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="subject" placeholder="Subject">
+                        </div>
+                        <div class="form-group">
+                            <textarea name="message" placeholder="Your Message" required></textarea>
+                        </div>
+                        <!-- Optional: Redirect URL after submission -->
+                        <input type="hidden" name="_next" value="#contact">
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <span>Arvish</span>Nagpal
+                </div>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arvish Nagpal. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
